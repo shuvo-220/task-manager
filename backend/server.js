@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config({})
 import { connectDB } from './config/db.js';
 import userRouter from './routes/userRoute.js';
+import taskRouter from './routes/taskRoute.js';
 
 const app = express()
 const port = process.env.PORT || 4000
@@ -17,6 +18,7 @@ app.use(express.urlencoded({extended:true}))
 connectDB()
 
 app.use('/api/user', userRouter);
+app.use('/api/task', taskRouter);
 
 
 app.listen(port, ()=>{

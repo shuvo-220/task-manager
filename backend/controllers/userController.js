@@ -1,25 +1,23 @@
 import User from '../models/userModel.js';
-import validator from 'validator';
+// import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 // import isEmail from 'validator/lib/isEmail.js';
 
-const JWT_SECRET = process.env.JWT_SECRET;
-const TOKEN_EXPEIRES = '24h'
 
-const createToken = (userId) => jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: TOKEN_EXPEIRES });
+const createToken = (userId) => jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '24h' });
 
 export async function registerUser(req, res) {
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
         return res.status(400).json({ success: false, message: 'all fields required' });
     }
-    if (!validator.isEmail(email)) {
-        return res.status(400).json({ success: false, message: 'invalid email' });
-    }
-    if (validator.password.length < 8) {
-        return res.status(400).json({ success: false, message: 'password must be 8 char or more' });
-    }
+    // if (!validator.isEmail(email)) {
+    //     return res.status(400).json({ success: false, message: 'invalid email' });
+    // }
+    // if (validator.password.length < 8) {
+    //     return res.status(400).json({ success: false, message: 'password must be 8 char or more' });
+    // }
     try {
         if (await User.findOne({ email })) {
             return res.status(400).json({ success: false, message: 'user already exist, please login' })
@@ -52,7 +50,7 @@ export async function loginUser(req, res) {
         if (!user) {
             return res.status(400).json({ success: false, message: 'User not found' });
         }
-        const match = bcrypt.compare(password, user.password);
+        const match = await bcrypt.compare(password, user.password);
         if (!match) {
             return res.status(400).json({ success: false, message: 'invalid login details' });
         }
@@ -91,25 +89,25 @@ export async function updateProfile(req, res){
     }
 }
 
-export async function updatePassword(req, res){
-    const{currentPassword, newPassword} = req.body;
-    if(!currentPassword || !newPassword || newPassword.length <8){
-        return res.status(400).json({success:false, message:'password invalid or too short'});
-    }
-    try {
-        const user = await User.findById(req.user.id).select('password');
-        if(!user){
-            return res.status(400).json({success:false, message:'user not found'});
-        }
-        const match = bcrypt.compare(currentPassword, user.password)
-        if(!match){
-            return res.status(400).json({success:false, message:'currrent password not matched'});
-        }
-        user.password = bcrypt.hash(newPassword, 10)
-        await user.save();
-        res.json({success:true, message:'password changed'});
-    } catch (error) {
-        console.log(error.message)
-        res.status(500).json({success:false, message:'server error'});
-    }
-}
+// export async function updatePassword(req, res){
+//     const{currentPassword, newPassword} = req.body;
+//     if(!currentPassword || !newPassword || newPassword.length <8){
+//         return res.status(400).json({success:false, message:'password invalid or too short'});
+//     }
+//     try {
+//         const user = await User.findById(req.user.id).select('password');
+//         if(!user){
+//             return res.status(400).json({success:false, message:'user not found'});
+//         }
+//         const match = bcrypt.compare(currentPassword, user.password)
+//         if(!match){
+//             return res.status(400).json({success:false, message:'currrent password not matched'});
+//         }
+//         user.password = bcrypt.hash(newPassword, 10)
+//         await user.save();
+//         res.json({success:true, message:'password changed'});
+//     } catch (error) {
+//         console.log(error.message)
+//         res.status(500).json({success:false, message:'server error'});
+//     }
+// }
