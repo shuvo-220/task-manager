@@ -18,7 +18,7 @@ const Layout = ({ user, onLogout }) => {
     try {
       const token = localStorage.getItem('token')
       if (!token) throw new Error('no token found');
-      const data = await axios.get('http://localhost:4000/api/task/gp', {
+      const data = await axios.get('http://localhost:5000/api/task/gp', {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -60,7 +60,7 @@ const Layout = ({ user, onLogout }) => {
   },[tasks])
 
   const StatCard = ({title, icon, value})=>{
-    <div className='p-2 sm:p-3 rounded-xl bg-white shadow-sm border border-purple-100 hover:shadow-md transition-all duration-300 hover:border-purple-100 group'>
+    return <div className='p-2 sm:p-3 rounded-xl bg-white shadow-sm border border-purple-100 hover:shadow-md transition-all duration-300 hover:border-purple-100 group'>
       <div className='flex items-center gap-2 '>
         <div className='p-1.5 rounded-lg bg-gradient-to-br from-fuchsia-500/10 to-purple-500/10 group-hover:from-fuchsia-500/20 group-hover:to-purple-500/20  '>
           {icon}
@@ -142,11 +142,11 @@ const Layout = ({ user, onLogout }) => {
 
             <div className='bg-white rounded-xl p-4 sm:p-5 shadow-sm border border-purple-100 '>
               <h3 className='text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-800 flex items-center gap-2 '>
-                <Clock className='w-4 h-4 sm:w-5 sm:h-5 text-purple-500 ' />
+                <Clock className='w-4 h-4 sm:w-5 sm:h-5 text-purple-500' />
                 Recent Activity
               </h3>
               <div className='space-y-2 sm:space-y-3 '>
-                {tasks.silece(0,3).map((task)=>(
+                {tasks.slice(0,3).map((task)=>(
                   <div key={task._id || task.id} className='flex items-center justify-between p-2 sm:p-3 hover:bg-purple-50/50 rounded-lg transition-colors duration-200 border border-transparent hover:border-purple-100'>
                     <div className='flex min-w-0 '>
                       <p className='text-sm font-medium text-gray-700 break-words whitespace-normal'>

@@ -59,7 +59,7 @@ const Login = ({onSubmit, onSwitchMode}) => {
     try {
       const {data} = await axios.post(`${url}/api/user/login`, formData)
       if(!data.token) throw new Error(data.message || 'login failed')
-
+        console.log(data)
       localStorage.setItem('token', data.token)
       localStorage.setItem('userId', data.user.id)
       setFormData(INITIAL_FORM)
@@ -107,7 +107,7 @@ const Login = ({onSubmit, onSwitchMode}) => {
           className='w-4 h-4 text-purple-500 focus:ring-purple-400 border-gray-300 rounded' required/>
           <label htmlFor='rememberMe' className='ml-2 block text-sm text-gray-700 '>Remember Me</label>
         </div>
-        <button type='submit' className={BUTTON_CLASSES} disabled={loading}>
+        <button type='submit' className={BUTTON_CLASSES}>
           {loading ? 'Loging in...' : (
             <><LogIn className='w-4 h-4' />Login</>
 
